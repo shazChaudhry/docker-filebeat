@@ -32,12 +32,12 @@ Run a jenkins container: <br>
 
 
 Build filebeat image ensurinig that config/filebeat.yml is configured as appropriate for your system: <br>
-```docker build -t filebeat .```
+```docker build -t shazchaudhry/docker-filebeat .```
 
 Start filebeat container that will forward Jenkins build logs to Elastic search. In order to persist filebeat state, 
 mount a hsot volume. Otherwise, following a container crash / restart, filebeat will start reading & forwarding logs 
 that have already been processed: <br>
-```docker run -d --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins filebeat```
+```docker run -d --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins shazchaudhry/docker-filebeat```
 
 In Kibana, create an index called "logstash-*" to jenkins' view build logs<br>
 
