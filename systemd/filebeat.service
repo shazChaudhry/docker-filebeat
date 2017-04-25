@@ -10,9 +10,9 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=-/usr/bin/docker stop filebeat
 ExecStartPre=-/usr/bin/docker rm filebeat
-#ExecStartPre=/usr/bin/docker pull filebeat
+ExecStartPre=/usr/bin/docker pull shazchaudhry/docker-filebeat
 TimeoutStartSec=20
-ExecStart=/usr/bin/docker run --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins:ro filebeat
+ExecStart=/usr/bin/docker run --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins:ro shazchaudhry/docker-filebeat
 
 [Install]
 WantedBy=multi-user.target
