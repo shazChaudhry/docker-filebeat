@@ -39,7 +39,7 @@ mount a hsot volume. Otherwise, following a container crash / restart, filebeat 
 that have already been processed: <br>
 ```docker run -d --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins:ro shazchaudhry/docker-filebeat```
 
-In Kibana, create an index called "logstash-*" to jenkins' view build logs<br>
+In Kibana, create an index called "filebeat-*" to view Jenkins' build logs<br>
 
 **Issue:**
 - If jenkins container is stopped, removed and run again, filebeat will not be able to read jenkins' log files. This is
