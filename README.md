@@ -2,12 +2,18 @@
 As a member of DevOps team I want to send Jenkins build logs to Elastic stack so that Ops team can diagnose issue
 by analysing all available logs in a central logging system.
 
+**Assumptions:**
+* No Jenkins' logs can be written to the host file system
+* Your infrastucture is based on ubuntu/xenial64
+* Your infrastructure has [Docker Swarm cluster](https://docs.docker.com/get-started/part4/#understanding-swarm-clusters) configuration
+
+**Prerequisite**
+* Set up a development infrastructre by following [Infra as Code](https://github.com/shazChaudhry/infra) repo on github
+* Setup [Elastic Stack](https://github.com/shazChaudhry/logging) by following github repo
+
 **Requirements:**
 - Ensure Elasticsearch, (Logstash optional) and Kibana are up and running
 - Both jenkins and filebeat are running on the same host
-
-**Assumptions:**
-- No Jenkins' logs can be written to the host file system
 
 Edit filebeat configuration as appropriate for your system. The configurations are at _config/filebeat.yml_:
 ```
@@ -61,7 +67,6 @@ file system
   container<br>
 
 **Test**
-- _Testing of this user story was done on Ubuntu 16.04_
 - Create and run a job in jenkins
 - Create an index called `filebeat-*` in Kibana and check the logs in discovery tab
 
