@@ -4,12 +4,12 @@ by analysing all available logs in a central logging system.
 
 **Assumptions:**
 * No Jenkins' logs can be written to the host file system
-* Your infrastucture is based on ubuntu/xenial64
-* Your infrastructure has [Docker Swarm cluster](https://docs.docker.com/get-started/part4/#understanding-swarm-clusters) configuration
+* Your infrastucture is required to be based on ubuntu/xenial64
+* Your infrastructure is required to have [Docker Swarm cluster](https://docs.docker.com/get-started/part4/#understanding-swarm-clusters) configuration
 
 **Prerequisite**
 * Set up a development infrastructre by following [Infra as Code](https://github.com/shazChaudhry/infra) repo on github
-* Setup [Elastic Stack](https://github.com/shazChaudhry/logging) by following github repo
+* Setup Elastic Stack by following [this](https://github.com/shazChaudhry/logging) github repo
 
 **Requirements:**
 - Ensure Elasticsearch, (Logstash optional) and Kibana are up and running
