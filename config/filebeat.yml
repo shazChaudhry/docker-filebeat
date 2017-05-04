@@ -23,7 +23,6 @@ filebeat.prospectors:
     - /var/jenkins_home/jobs/*/builds/*/log
     # for jenkins blue ocean pipeline jobs
     - /var/jenkins_home/jobs/*/jobs/*/branches/*/builds/*/log
-    #- c:\programdata\elasticsearch\logs\*
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.
@@ -49,7 +48,7 @@ filebeat.prospectors:
   # for Java Stack Traces or C-Line Continuation
 
   # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
-  #multiline.pattern: ^\[
+  multiline.pattern: ^\[
 
   # Defines if the pattern set under pattern should be negated or not. Default is false.
   #multiline.negate: false
@@ -57,7 +56,7 @@ filebeat.prospectors:
   # Match can be set to "after" or "before". It is used to define if lines should be append to a pattern
   # that was (not) matched before or after or as long as a pattern is not matched based on negate.
   # Note: After is the equivalent to previous and before is the equivalent to to next in Logstash
-  #multiline.match: after
+  multiline.match: after
 
 
 #================================ General =====================================
@@ -83,7 +82,7 @@ filebeat.prospectors:
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["192.168.99.101:9200"]
+  hosts: ["node1:9200"]
 
   # Optional protocol and basic auth credentials.
   protocol: "http"

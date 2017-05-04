@@ -25,16 +25,16 @@ Edit filebeat configuration as appropriate for your system. The configurations a
 
   output.elasticsearch:
     # Array of hosts to connect to.
-    hosts: ["HOST_NAME:9200"]
+    hosts: ["node1:9200"]
 
     # Optional protocol and basic auth credentials.
     protocol: "http"
-    username: "USER_NAME"
-    password: "PASSWORD"
+    username: "elastic"
+    password: "changeme"
 ```
 
 Run a jenkins container: <br>
-```docker run -d --rm --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock jenkinsci/jenkins```
+```docker run -d --rm --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock shazchaudhry/docker-jenkins```
 
 
 Build filebeat image ensurinig that config/filebeat.yml is configured as appropriate for your system: <br>
@@ -43,7 +43,7 @@ Build filebeat image ensurinig that config/filebeat.yml is configured as appropr
 Start filebeat container that will forward Jenkins build logs to Elastic search. In order to persist filebeat state,
 mount a hsot volume. Otherwise, following a container crash / restart, filebeat will start reading & forwarding logs
 that have already been processed: <br>
-```docker run -d --rm --name filebeat --volume filebeat_data:/data --volumes-from jenkins:ro shazchaudhry/docker-filebeat```
+```docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volumes-from jenkins:ro shazchaudhry/docker-filebeat```
 
 In Kibana, create an index called "filebeat-*" to view Jenkins' build logs<br>
 
