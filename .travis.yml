@@ -1,5 +1,6 @@
 sudo: required
-env: FILEBEAT_VERSION: 5.x
+env:
+  - FILEBEAT_VERSION=5.x
 before_install:
   # Install latest version docker CE
   - sudo apt-get update
