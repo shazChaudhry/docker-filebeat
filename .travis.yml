@@ -3,18 +3,6 @@ services:
   - docker
 
 script:
-  - echo "Build local image"
-  - docker build --rm --no-cache -t shazchaudhry/docker-filebeat .
-  - docker images
-  - echo "Run local image"
-  - docker run -d --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock shazchaudhry/docker-jenkins
-  - sleep 60 #wait for jenkins to come up
-  - docker run -d --name filebeat --volume filebeat_data:/var/lib/filebeat --volumes-from jenkins:ro shazchaudhry/docker-filebeat
-  - sleep 60 #wait for jenkins to come up
-  - docker ps -a
-  - docker stop filebeat
-  - docker rm filebeat
-  - docker stop jenkins
-  - docker rm jenkins
+  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=5.x -t shazchaudhry/docker-filebeat:5.x .
   - docker ps -a
   - docker images
