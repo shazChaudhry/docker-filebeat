@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/shazChaudhry/docker-filebeat.svg?branch=master)](https://travis-ci.org/shazChaudhry/docker-filebeat)
+[![Docker Repository on Quay](https://quay.io/repository/shazchaudhry/docker-filebeat/status "Docker Repository on Quay")](https://quay.io/repository/shazchaudhry/docker-filebeat)
 
 **User story** <br>
 As a member of DevOps team I want to send Jenkins build logs to Elastic stack so that Ops team can diagnose issue

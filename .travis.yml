@@ -1,21 +1,15 @@
 sudo: required
+env: FILEBEAT_VERSION: 5.x
 before_install:
   # Install latest version docker CE
-  - sudo apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-  - sudo apt-get install -y  apt-transport-https ca-certificates curl software-properties-common
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
-  - sudo apt-get install docker-ce
-  - docker version
-  # Install latest version of docker-compose
-  - sudo apt-get install -y python-pip && pip install --upgrade pip
-  - sudo pip install docker-compose
-  - docker-compose version
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
 services:
   - docker
 
 script:
-  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=5.x -t shazchaudhry/docker-filebeat:5.x .
+  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} -t quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
   - docker images
-  - docker inspect shazchaudhry/docker-filebeat
+  - docker inspect quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
+  - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
+  - docker push quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
