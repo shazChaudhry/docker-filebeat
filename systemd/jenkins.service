@@ -9,7 +9,11 @@ Restart=always
 ExecStartPre=-/usr/bin/docker stop jenkins
 ExecStartPre=-/usr/bin/docker rm jenkins
 ExecStartPre=/usr/bin/docker pull shazchaudhry/docker-jenkins
-ExecStart=/usr/bin/docker run --rm --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock shazchaudhry/docker-jenkins
+ExecStart=/usr/bin/docker run --rm \
+  --name jenkins \
+  --publish 8080:8080 \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+  shazchaudhry/docker-jenkins
 
 [Install]
 WantedBy=multi-user.target

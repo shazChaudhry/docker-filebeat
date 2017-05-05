@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+script:
+  - echo "Build local image"
+  - docker build --rm --no-cache -t shazchaudhry/docker-filebeat .
+  - docker image ls
+  - echo "Run local image"
+  - docker run -d --rm --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock shazchaudhry/docker-jenkins
+  - sleep 60 #wait for jenkins to come up
+  - docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volumes-from jenkins:ro shazchaudhry/docker-filebeat
+  - sleep 60 #wait for jenkins to come up
+  - docker ps -a
+  - docker image ls
