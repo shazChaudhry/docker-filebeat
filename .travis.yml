@@ -4,12 +4,16 @@ env:
 before_install:
   # Install latest version docker CE
   - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine docker-compose
+  - docker version
+  - docker-compose version
 services:
   - docker
 
 script:
-  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} -t quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
+  - docker build --rm --no-cache \
+      --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} \
+      --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
   - docker images
   - docker inspect quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
