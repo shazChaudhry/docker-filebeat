@@ -14,9 +14,7 @@ services:
   - docker
 
 script:
-  - docker build --rm --no-cache \
-      --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} \
-      --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
+  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
   - docker images
   - docker inspect quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
