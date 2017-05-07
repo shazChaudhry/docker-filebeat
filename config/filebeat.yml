@@ -20,9 +20,9 @@ filebeat.prospectors:
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
     # for regular jenkins jobs
-    - /var/jenkins_home/jobs/*/builds/*/log
+    - /var/*/jobs/*/builds/*/log
     # for jenkins blue ocean pipeline jobs
-    - /var/jenkins_home/jobs/*/jobs/*/branches/*/builds/*/log
+    - /var/*/jobs/*/jobs/*/branches/*/builds/*/log
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.
@@ -82,12 +82,12 @@ filebeat.prospectors:
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["node1:9200"]
+  hosts: [${HOST}:${PORT}]
 
   # Optional protocol and basic auth credentials.
-  protocol: "http"
-  username: "elastic"
-  password: "changeme"
+  protocol: ${PROTOCOL}
+  username: ${USERNAME}
+  password: ${PASSWORD}
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:

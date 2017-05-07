@@ -5,17 +5,26 @@ before_install:
   # Install latest version docker CE
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
-  - docker version
+  - docker info
+  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
+  - docker image ls
   # Install latest version of docker-compose
-  - sudo apt-get install -y python-pip && pip install --upgrade pip
-  - sudo pip install docker-compose
-  - docker-compose version
+  #- sudo apt-get update -qq
+  #- sudo apt-get install -qq python-pip && pip install --upgrade pip
+  #- sudo pip install docker-compose
+  #- docker-compose version
 services:
   - docker
+  - elasticsearch
+
+before_script:
+  - sleep 30
 
 script:
-  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
-  - docker images
-  - docker inspect quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
+  - docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volume ./var/jenkins_home:/var/jenkins_home --env HOST=127.0.0.1 --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
+  - sleep 120
+  - docker exec -it filebeat ls -latr /var/jenkins_home
+
+after_script:
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
   - docker push quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}

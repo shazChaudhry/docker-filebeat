@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/shazChaudhry/docker-filebeat.svg?branch=master)](https://travis-ci.org/shazChaudhry/docker-filebeat)
+[![Build Status on Travis](https://travis-ci.org/shazChaudhry/docker-filebeat.svg?branch=master "CI build on Travis")](https://travis-ci.org/shazChaudhry/docker-filebeat)
 [![Docker Repository on Quay](https://quay.io/repository/shazchaudhry/docker-filebeat/status "Docker Repository on Quay")](https://quay.io/repository/shazchaudhry/docker-filebeat)
 
 **User story** <br>
@@ -18,35 +18,39 @@ by analysing all available logs in a central logging system.
 - Ensure Elasticsearch, (Logstash optional) and Kibana are up and running
 - Both jenkins and filebeat are running on the same host
 
-Edit filebeat configuration as appropriate for your system. The configurations are at _config/filebeat.yml_:
-```
-  paths:
-    # for regular jenkins jobs
-    - /var/jenkins_home/jobs/*/builds/*/log
-    # for jenkins blue ocean pipeline jobs
-    - /var/jenkins_home/jobs/*/jobs/*/branches/*/builds/*/log
-
-  output.elasticsearch:
-    # Array of hosts to connect to.
-    hosts: ["node1:9200"]
-
-    # Optional protocol and basic auth credentials.
-    protocol: "http"
-    username: "elastic"
-    password: "changeme"
-```
+Edit filebeat configuration as appropriate for your system. The configurations are at _config/filebeat.yml_.
 
 Run a jenkins container: <br>
-```docker run -d --rm --name jenkins -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock shazchaudhry/docker-jenkins```
+```
+docker run -d --rm \
+  --name jenkins -p 8080:8080 \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+shazchaudhry/docker-jenkins
+```
 
 
 Build filebeat image ensurinig that config/filebeat.yml is configured as appropriate for your system: <br>
-```docker build --rm --no-cache -t shazchaudhry/docker-filebeat .```
+```
+docker build
+  --rm --no-cache \
+  --tag shazchaudhry/docker-filebeat .
+```
 
 Start filebeat container that will forward Jenkins build logs to Elastic search. In order to persist filebeat state,
 mount a hsot volume. Otherwise, following a container crash / restart, filebeat will start reading & forwarding logs
 that have already been processed: <br>
-```docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volumes-from jenkins:ro shazchaudhry/docker-filebeat```
+```
+docker run -d --rm \
+  --name filebeat \
+  --volume filebeat_data:/var/lib/filebeat \
+  --volumes-from jenkins:ro \
+  --env HOST=127.0.0.1 \
+  --env PORT=9200 \
+  --env PROTOCOL=http \
+  --env USERNAME=elastic \
+  --env PASSWORD=changeme \
+shazchaudhry/docker-filebeat
+```
 
 In Kibana, create an index called "filebeat-*" to view Jenkins' build logs<br>
 
