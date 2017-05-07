@@ -11,6 +11,7 @@ before_install:
   #- sudo apt-get install -qq python-pip && pip install --upgrade pip
   #- sudo pip install docker-compose
   #- docker-compose version
+  - sudo sysctl -w vm.max_map_count=262144
 services:
   - docker
 
