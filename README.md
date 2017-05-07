@@ -44,7 +44,7 @@ docker run -d --rm \
   --name filebeat \
   --volume filebeat_data:/var/lib/filebeat \
   --volumes-from jenkins:ro \
-  --env HOST=127.0.0.1 \
+  --env HOST=node1 \
   --env PORT=9200 \
   --env PROTOCOL=http \
   --env USERNAME=elastic \

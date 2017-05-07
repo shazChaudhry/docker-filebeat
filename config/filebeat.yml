@@ -82,12 +82,12 @@ filebeat.prospectors:
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: [${HOST}:${PORT}]
+  hosts: ["${HOST}:${PORT}"]
 
   # Optional protocol and basic auth credentials.
-  protocol: ${PROTOCOL}
-  username: ${USERNAME}
-  password: ${PASSWORD}
+  protocol: "${PROTOCOL}"
+  username: "${USERNAME}"
+  password: "${PASSWORD}"
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:
