@@ -12,16 +12,7 @@ ExecStartPre=-/usr/bin/docker stop filebeat
 ExecStartPre=-/usr/bin/docker rm filebeat
 ExecStartPre=/usr/bin/docker pull shazchaudhry/docker-filebeat
 TimeoutStartSec=20
-ExecStart=/usr/bin/docker run --rm \
-  --name filebeat \
-  --volume filebeat_data:/var/lib/filebeat \
-  --volumes-from jenkins:ro \
-  --env HOST=node1 \
-  --env PORT=9200 \
-  --env PROTOCOL=http \
-  --env USERNAME=elastic \
-  --env PASSWORD=changeme \
-  shazchaudhry/docker-filebeat
+ExecStart=/usr/bin/docker run --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volumes-from jenkins:ro --env HOST=node1 --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme shazchaudhry/docker-filebeat
 
 [Install]
 WantedBy=multi-user.target
