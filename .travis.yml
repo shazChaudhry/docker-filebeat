@@ -34,5 +34,5 @@ script:
 after_script:
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
   - docker push quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
-  - docker docker tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} quay.io/shazchaudhry/docker-filebeat:latest
+  - docker tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} quay.io/shazchaudhry/docker-filebeat:latest
   - docker push quay.io/shazchaudhry/docker-filebeat:latest
