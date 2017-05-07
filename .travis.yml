@@ -13,17 +13,15 @@ before_install:
   #- sudo apt-get install -qq python-pip && pip install --upgrade pip
   #- sudo pip install docker-compose
   #- docker-compose version
-  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/5.4.0/elasticsearch-5.4.0.deb && sudo dpkg -i --force-confnew elasticsearch-5.4.0.deb
-  # && sudo service elasticsearch restart
+  - docker run -d --rm --name elasticsearch --publish 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:5.4.0
 services:
   - docker
-  - elasticsearch
 
 before_script:
-  - sleep 30
+  - sleep 120
 
 script:
-  - docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volume ./var/jenkins_home:/var/jenkins_home --env HOST=127.0.0.1 --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
+  - docker run -d --rm --name filebeat --volume filebeat_data:/var/lib/filebeat --volume ./var/jenkins_home:/var/jenkins_home --env HOST=elasticsearch --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
   - sleep 120
   - docker exec -it filebeat ls -latr /var/jenkins_home
 
