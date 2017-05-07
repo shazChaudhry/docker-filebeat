@@ -30,6 +30,8 @@ script:
   - sleep 60
   - docker ps -a
   - docker exec -it filebeat ls -latr /var/jenkins_home
+  #List all Elasticsearch Indices. One entry sould be for filebeat
+  - curl -XGET -u elastic:changeme '127.0.0.1:9200/_cat/indices?v&pretty'
 
 after_script:
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
