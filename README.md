@@ -18,7 +18,7 @@ by analysing all available logs in a central logging system.
 - Ensure Elasticsearch, _(Logstash optional)_ and Kibana are up and running
 - Both jenkins and filebeat are running on the same host
 
-Edit filebeat configuration as appropriate for your system. The configurations are located at _config/filebeat.yml_.
+If required, edit filebeat configuration as appropriate for your system. However, filebeat behavior is controlled with environment values in docrk run command below. Should you need additional parameters configured then configurations are located at _config/filebeat.yml_.
 
 Start a jenkins container, create some jobs and run some builds. This will create build logs that filebeat will read and then forward them to Elasticsearch:
 ```
@@ -27,10 +27,11 @@ docker run -d --rm \
   --volume /var/run/docker.sock:/var/run/docker.sock \
 quay.io/shazchaudhry/docker-jenkins
 ```
-_**NOTE:**- for this Jenkins containder nothing is mounted from the host file system _
+_**NOTE:** for this Jenkins containder nothing is mounted from the host file system_
 
 Build filebeat image ensurinig that config/filebeat.yml is configured as appropriate for your system or requirements:
 ```
+export FILEBEAT_VERSION=5.x
 docker build \
   --rm --no-cache \
   --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} \
