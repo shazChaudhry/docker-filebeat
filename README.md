@@ -31,7 +31,7 @@ _**NOTE:** for this Jenkins containder nothing is mounted from the host file sys
 
 Build filebeat image ensurinig that config/filebeat.yml is configured as appropriate for your system or as requirements:
 ```
-export FILEBEAT_VERSION=5.4.3
+export FILEBEAT_VERSION=5.x
 docker build \
   --rm --no-cache \
   --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} \
