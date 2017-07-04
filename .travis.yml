@@ -1,6 +1,6 @@
 sudo: required
 env:
-  - FILEBEAT_VERSION=5.x
+  - FILEBEAT_VERSION=5.4.3
 before_install:
   # Install latest version docker engine
   - sudo apt-get update
