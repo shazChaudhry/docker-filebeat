@@ -1,6 +1,6 @@
 sudo: required
 env:
-  - FILEBEAT_VERSION=5.x
+  - VERSION=5.5.0
 before_install:
   # Install latest version docker engine
   - sudo apt-get update
@@ -17,24 +17,24 @@ services:
   - docker
 
 before_script:
-  - docker build --rm --no-cache --build-arg FILEBEAT_VERSION=${FILEBEAT_VERSION} --tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} .
+  - docker build --rm --no-cache --tag quay.io/shazchaudhry/docker-filebeat:${VERSION} .
 
 script:
   - docker network create -d bridge filebeatSDN
-  - docker run -d --rm --name elasticsearch --network=filebeatSDN --publish 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:5.4.0
+  - docker run -d --rm --name elasticsearch --network=filebeatSDN --publish 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
   - sleep 120
   # Mount build logs / test data into filebeat container
-  - docker run -d --rm --name filebeat --network=filebeatSDN --volume filebeat_data:/var/lib/filebeat --volume $PWD/var/jenkins_home:/var/jenkins_home --env HOST=elasticsearch --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
+  - docker run -d --rm --name filebeat --network=filebeatSDN --volume filebeat_data:/usr/share/filebeat/data --volume $PWD/var/jenkins_home:/var/jenkins_home --env HOST=elasticsearch --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${VERSION}
   - docker network inspect filebeatSDN
   - docker image ls
   - sleep 60
-  - docker ps -a
-  - docker exec -it filebeat ls -latr /var/jenkins_home
+  - docker container ps -a
+  - docker container exec -it filebeat ls -latr /var/jenkins_home
   #List all Elasticsearch Indices. One entry sould be for filebeat
   - curl -XGET -u elastic:changeme '127.0.0.1:9200/_cat/indices?v&pretty'
 
 after_script:
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
-  - docker push quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION}
-  - docker tag quay.io/shazchaudhry/docker-filebeat:${FILEBEAT_VERSION} quay.io/shazchaudhry/docker-filebeat:latest
+  - docker push quay.io/shazchaudhry/docker-filebeat:${VERSION}
+  - docker tag quay.io/shazchaudhry/docker-filebeat:${VERSION} quay.io/shazchaudhry/docker-filebeat:latest
   - docker push quay.io/shazchaudhry/docker-filebeat:latest
