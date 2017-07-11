@@ -2,20 +2,18 @@
 [![Docker Repository on Quay](https://quay.io/repository/shazchaudhry/docker-filebeat/status "Docker Repository on Quay")](https://quay.io/repository/shazchaudhry/docker-filebeat)
 
 **User story:**<br>
-As a member of DevOps team I want to send Jenkins build logs to Elastic stack so that Ops team can diagnose production issues
-by analysing all available logs in a central logging system.
-
-**Note:**
-* For the purpose of testing filebeat, Docker Swarm enabled [Vagrant](https://github.com/shazChaudhry/infra) environment was created and then [Elastic Stack](https://github.com/shazChaudhry/logging) was installed
-* The filebeat image has been tested on Docker 17.06.0-ce
+As a member of DevOps team, I want to send Jenkins build logs to Elastic stack so that Ops team can diagnose production issues
+by analyzing all available logs in a central logging system.
 
 **Assumptions:**
-* Jenkins build logs are to be sent to Elasticsearch. However, no logs are written to the host file system where Jenkins is running
+* Jenkins build logs will be sent to Elasticsearch. However, no logs are written to the host file system where Jenkins is running
 
 **Requirements:**
-* Elasticsearch, _(Logstash optional)_ and Kibana are up and running
-* Elasticsearch port 9200 is open for filebeat to send logs to
+* ELK v5.5.0 (Elasticsearch, Logstash and Kibana) is up and running
+* Elasticsearch port is open for filebeat to send logs to
+* Latest version of Docker is installed
 * Both Jenkins and Filebeat are running on the same host
+    * this metricbeat image has been tested on Ubuntu 17.04 & Docker 17.06.0-ce
 
 **Lightweight log data shipper for local files:**<br>
 If required, edit filebeat configuration as appropriate for your system. However, filebeat behaviour is controlled with environment values in docker run command below. Should you need additional parameters configured then configurations are located at _config/filebeat.yml_.
@@ -30,7 +28,7 @@ Build filebeat image ensurinig that config/filebeat.yml is configured as appropr
 ```
 docker build \
   --rm --no-cache \
-  --tag shazchaudhry/docker-filebeat .
+  --tag quay.io/shazchaudhry/docker-filebeat .
 ```
 Start filebeat container that will forward Jenkins build logs to Elastic search. In order to persist filebeat state,
 mount a hsot directory. Otherwise, following a container crash / restart, filebeat might start reading & forwarding logs
@@ -45,7 +43,7 @@ docker run -d --rm \
   --env PROTOCOL=http \
   --env USERNAME=elastic \
   --env PASSWORD=changeme \
-shazchaudhry/docker-filebeat
+quay.io/shazchaudhry/docker-filebeat
 ```
 
 If not already available in Kibana, create an index called "filebeat-*" to view Jenkins' build logs.
