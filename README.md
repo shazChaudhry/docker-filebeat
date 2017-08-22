@@ -9,11 +9,11 @@ by analyzing all available logs in a central logging system.
 * Jenkins build logs will be sent to Elasticsearch. However, no logs are written to the host file system where Jenkins is running
 
 **Requirements:**
-* ELK v5.5.0 (Elasticsearch, Logstash and Kibana) is up and running
+* ELK v5.5.1 (Elasticsearch, Logstash and Kibana) is up and running
 * Elasticsearch port is open for filebeat to send logs to
 * Latest version of Docker is installed
 * Both Jenkins and Filebeat are running on the same host
-    * this metricbeat image has been tested on Ubuntu 17.04 & Docker 17.06.0-ce
+    * this metricbeat image has been tested on Ubuntu 16.04 & Docker 17.06.0-ce
 
 **Lightweight log data shipper for local files:**<br>
 If required, edit filebeat configuration as appropriate for your system. However, filebeat behaviour is controlled with environment values in docker run command below. Should you need additional parameters configured then configurations are located at _config/filebeat.yml_.

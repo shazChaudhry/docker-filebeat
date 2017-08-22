@@ -1,6 +1,6 @@
 sudo: required
 env:
-  - VERSION=5.5.0
+  - VERSION=5.5.1
 before_install:
   # Install latest version docker engine
   - sudo apt-get update
