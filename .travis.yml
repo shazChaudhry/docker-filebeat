@@ -1,17 +1,10 @@
 sudo: required
 env:
-  - VERSION=5.5.1
+  - VERSION=5.6.2
 before_install:
-  # Install latest version docker engine
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - docker version
-  # Install latest version of docker-compose
-  #- sudo apt-get update -qq
-  #- sudo apt-get install -qq python-pip && pip install --upgrade pip
-  #- sudo pip install docker-compose
-  #- docker-compose version
-  # https://www.elastic.co/guide/en/elasticsearch/reference/5.0/vm-max-map-count.html
   - sudo sysctl -w vm.max_map_count=262144
 services:
   - docker
@@ -23,18 +16,14 @@ script:
   - docker network create -d bridge filebeatSDN
   - docker run -d --rm --name elasticsearch --network=filebeatSDN --publish 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
   - sleep 120
-  # Mount build logs / test data into filebeat container
   - docker run -d --rm --name filebeat --network=filebeatSDN --volume filebeat_data:/usr/share/filebeat/data --volume $PWD/var/jenkins_home:/var/jenkins_home --env HOST=elasticsearch --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${VERSION}
   - docker network inspect filebeatSDN
   - docker image ls
   - sleep 60
   - docker container ps -a
   - docker container exec -it filebeat ls -latr /var/jenkins_home
-  #List all Elasticsearch Indices. One entry sould be for filebeat
   - curl -XGET -u elastic:changeme '127.0.0.1:9200/_cat/indices?v&pretty'
 
 after_script:
   - docker login -u="shazchaudhry" -p=${QUAY_PASSWORD} quay.io
   - docker push quay.io/shazchaudhry/docker-filebeat:${VERSION}
-  - docker tag quay.io/shazchaudhry/docker-filebeat:${VERSION} quay.io/shazchaudhry/docker-filebeat:latest
-  - docker push quay.io/shazchaudhry/docker-filebeat:latest

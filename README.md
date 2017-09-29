@@ -9,11 +9,10 @@ by analyzing all available logs in a central logging system.
 * Jenkins build logs will be sent to Elasticsearch. However, no logs are written to the host file system where Jenkins is running
 
 **Requirements:**
-* ELK v5.5.1 (Elasticsearch, Logstash and Kibana) is up and running
+* ELK v5.6.2 (Elasticsearch, Logstash and Kibana) is up and running
 * Elasticsearch port is open for filebeat to send logs to
 * Latest version of Docker is installed
 * Both Jenkins and Filebeat are running on the same host
-    * this metricbeat image has been tested on Ubuntu 16.04 & Docker 17.06.0-ce
 
 **Lightweight log data shipper for local files:**<br>
 If required, edit filebeat configuration as appropriate for your system. However, filebeat behaviour is controlled with environment values in docker run command below. Should you need additional parameters configured then configurations are located at _config/filebeat.yml_.
@@ -28,7 +27,7 @@ Build filebeat image ensurinig that config/filebeat.yml is configured as appropr
 ```
 docker build \
   --rm --no-cache \
-  --tag quay.io/shazchaudhry/docker-filebeat .
+  --tag quay.io/shazchaudhry/docker-filebeat:5.6.2 .
 ```
 Start filebeat container that will forward Jenkins build logs to Elastic search. In order to persist filebeat state,
 mount a hsot directory. Otherwise, following a container crash / restart, filebeat might start reading & forwarding logs
@@ -38,12 +37,12 @@ docker run -d --rm \
   --name filebeat \
   --volume filebeat_data:/usr/share/filebeat/data \
   --volumes-from jenkins:ro \
-  --env HOST=node1 \
+  --env HOST=localhost \
   --env PORT=9200 \
   --env PROTOCOL=http \
   --env USERNAME=elastic \
   --env PASSWORD=changeme \
-quay.io/shazchaudhry/docker-filebeat
+quay.io/shazchaudhry/docker-filebeat:5.6.2
 ```
 
 If not already available in Kibana, create an index called "filebeat-*" to view Jenkins' build logs.
@@ -64,7 +63,7 @@ file system
  `sudo systemctl start jenkins.service`<br>
  `sudo systemctl start filebeat.service`<br>
  `docker container ps -a` to check if filebeat and jenkins are up and running. <br>
-  `docker container exec -it filebeat ls -latr /var/jenkins_home` to see if jenkins volume is visible from within filebeat's container
+ `docker container exec -it filebeat ls -latr /var/jenkins_home` to see if jenkins volume is visible from within filebeat's container
 
 **Test**
 - Create and run a job in jenkins
