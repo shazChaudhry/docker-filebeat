@@ -37,7 +37,6 @@ docker run -d --rm \
   --name filebeat \
   --volume filebeat_data:/usr/share/filebeat/data \
   --volumes-from jenkins:ro \
-  --network=host \
   --env HOST=localhost \
   --env PORT=9200 \
   --env PROTOCOL=http \
@@ -64,7 +63,7 @@ file system
  `sudo systemctl start jenkins.service`<br>
  `sudo systemctl start filebeat.service`<br>
  `docker container ps -a` to check if filebeat and jenkins are up and running. <br>
-  `docker container exec -it filebeat ls -latr /var/jenkins_home` to see if jenkins volume is visible from within filebeat's container
+ `docker container exec -it filebeat ls -latr /var/jenkins_home` to see if jenkins volume is visible from within filebeat's container
 
 **Test**
 - Create and run a job in jenkins
