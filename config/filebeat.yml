@@ -1,6 +1,7 @@
 
 filebeat.prospectors:
-- input_type: log
+- type: log
+  enabled: true
   paths:
     - /var/*/jobs/*/builds/*/log
     - /var/*/jobs/*/jobs/*/branches/*/builds/*/log
@@ -9,10 +10,13 @@ filebeat.prospectors:
 
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
-  hosts: ["${HOST}:${PORT}"]
-  protocol: "${PROTOCOL}"
-  username: "${USERNAME}"
-  password: "${PASSWORD}"
+  hosts: ["localhost:9200"]
+  username: elastic
+  password: changeme
 
 #============================== Dashboards =====================================
-dashboards.enabled: true
+setup.dashboards.enabled: true
+# setup.kibana:
+#   host: "kibana:5601"
+#   username: elastic
+#   password: changeme

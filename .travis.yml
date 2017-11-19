@@ -1,6 +1,6 @@
 sudo: required
 env:
-  - VERSION=5.6.2
+  - VERSION=6.0.0
 before_install:
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
@@ -14,9 +14,12 @@ before_script:
 
 script:
   - docker network create -d bridge filebeatSDN
-  - docker run -d --rm --name elasticsearch --network=filebeatSDN --publish 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
+  - docker container run -d --rm --name elasticsearch --network=filebeatSDN --publish 9200:9200 -e "discovery.type=single-node" -e ELASTIC_PASSWORD=changeme docker.elastic.co/elasticsearch/elasticsearch-platinum:${VERSION}
   - sleep 120
-  - docker run -d --rm --name filebeat --network=filebeatSDN --volume filebeat_data:/usr/share/filebeat/data --volume $PWD/var/jenkins_home:/var/jenkins_home --env HOST=elasticsearch --env PORT=9200 --env PROTOCOL=http --env USERNAME=elastic --env PASSWORD=changeme quay.io/shazchaudhry/docker-filebeat:${VERSION}
+  - docker container run -d --rm --name kibana --network=filebeatSDN --publish 5601:5601 -e ELASTICSEARCH_URL=http://elasticsearch:9200 -e ELASTICSEARCH_USERNAME=elastic -e ELASTICSEARCH_PASSWORD=changeme docker.elastic.co/kibana/kibana:${VERSION}
+  - sleep 120
+  - docker container run -d --rm --name filebeat --network=host --volume $PWD/var/jenkins_home:/var/jenkins_home quay.io/shazchaudhry/docker-filebeat:${VERSION}  
+  - sleep 120
   - docker network inspect filebeatSDN
   - docker image ls
   - sleep 60
