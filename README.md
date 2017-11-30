@@ -1,3 +1,6 @@
+# This repository has been depricated in favour of https://github.com/shazChaudhry/elastic. This repo will not get further updates
+
+
 [![Build Status on Travis](https://travis-ci.org/shazChaudhry/docker-filebeat.svg?branch=master "CI build on Travis")](https://travis-ci.org/shazChaudhry/docker-filebeat)
 [![Docker Repository on Quay](https://quay.io/repository/shazchaudhry/docker-filebeat/status "Docker Repository on Quay")](https://quay.io/repository/shazchaudhry/docker-filebeat)
 
